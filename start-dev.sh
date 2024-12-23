@@ -37,15 +37,24 @@ export POSTGRES_PORT="$POSTGRES_PORT"
 export TEMPLATE_DIR="$(pwd)/internal/templates" # Set the templates path for local runs
 export MIGRATIONS_PATH="file://$(pwd)/migrations" # Set the migrations path for local runs
 
-
-
 # Run the Go application
-echo "Starting the Go application..."
-air -c .air.toml & npm run tailwind:watch
+echo "Starting the Go application with air..."
+air -c .air.toml &
+AIR_PID=$! # Capture the PID of the air process
 
-# Cleanup: Stop and remove the PostgreSQL container when the script exits
+npm run tailwind:watch &
+TAILWIND_PID=$! # Capture the PID of the npm process
+
+# Cleanup: Stop and remove the PostgreSQL container and air process when the script exits
 cleanup() {
     echo "Stopping and removing PostgreSQL container..."
     docker stop "$POSTGRES_CONTAINER_NAME" && docker rm "$POSTGRES_CONTAINER_NAME"
+    echo "Stopping air process..."
+    kill "$AIR_PID" 2>/dev/null
+    echo "Stopping Tailwind process..."
+    kill "$TAILWIND_PID" 2>/dev/null
 }
 trap cleanup EXIT
+
+# Keep the script running
+wait
