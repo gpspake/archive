@@ -121,12 +121,12 @@ _Note: This section provides a general overview but it's not a comprehensive dep
     ```
    docker ps
     CONTAINER ID   IMAGE                   COMMAND   CREATED         STATUS         PORTS                                                   NAMES
-    19282e9c5697   archive:latest   "./app"   3 minutes ago   Up 3 minutes   8080/tcp, 0.0.0.0:8080->8087/tcp, [::]:8080->8087/tcp   archive
+    19282e9c5697   archive:latest   "./app"   3 minutes ago   Up 3 minutes   8087/tcp, 0.0.0.0:8087->8087/tcp, [::]:8087->8087/tcp   archive
    ```
 1. Serve the app. Example using Caddy:
     ```
    archive.georgespake.com {
-        reverse_proxy 127.0.0.1:8080
+        reverse_proxy 127.0.0.1:8087
 
         tls {
                 dns digitalocean {env.DO_AUTH_TOKEN}

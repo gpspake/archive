@@ -59,8 +59,8 @@ COPY migrations ./migrations
 # Set environment variable for templates directory
 ENV TEMPLATE_DIR=/app/templates
 
-# Expose the port that the Go app will listen on (default 8080)
-EXPOSE 8080
+# Expose the port that the Go app will listen on (default 8087)
+EXPOSE 8087
 
 # Set the working directory back to /app to ensure migrations are found
 WORKDIR /app
