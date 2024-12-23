@@ -13,5 +13,5 @@ func main() {
 	defer db.Close()
 
 	// Start the server
-	e.Logger.Fatal(e.Start(":8086"))
+	e.Logger.Fatal(e.Start(":8087"))
 }

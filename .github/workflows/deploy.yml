@@ -47,7 +47,7 @@ jobs:
           ssh -i private_key ${SSH_USERNAME}@${DIGITALOCEAN_IP} << EOF
             docker stop archive || true
             docker rm archive || true
-            docker run -d --name archive -p 8080:8086 archive:latest
+            docker run -d --name archive -p 8080:8087 archive:latest
           EOF
           
           # Clean up
