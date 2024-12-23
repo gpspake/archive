@@ -1,4 +1,4 @@
-module simple-web-app
+module archive
 
 go 1.23
 

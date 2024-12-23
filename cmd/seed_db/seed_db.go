@@ -1,8 +1,8 @@
 package main
 
 import (
+	"archive/internal"
 	"log"
-	"simple-web-app/internal"
 )
 
 func main() {

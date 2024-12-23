@@ -20,7 +20,7 @@ jobs:
 
       # Step 3: Build Docker image
       - name: Build and tag Docker image
-        run: docker build -t simple-web-app:latest .
+        run: docker build -t archive:latest .
 
       # Step 4: Configure SSH
       - name: Set up SSH known_hosts
@@ -41,13 +41,13 @@ jobs:
           chmod 600 private_key
           
           # Transfer the Docker image to the droplet
-          docker save simple-web-app:latest | ssh -v -i private_key ${SSH_USERNAME}@${DIGITALOCEAN_IP} "docker load"
+          docker save archive:latest | ssh -v -i private_key ${SSH_USERNAME}@${DIGITALOCEAN_IP} "docker load"
           
           # Restart the app container on the droplet
           ssh -i private_key ${SSH_USERNAME}@${DIGITALOCEAN_IP} << EOF
-            docker stop simple-web-app || true
-            docker rm simple-web-app || true
-            docker run -d --name simple-web-app -p 8080:8086 simple-web-app:latest
+            docker stop archive || true
+            docker rm archive || true
+            docker run -d --name archive -p 8080:8086 archive:latest
           EOF
           
           # Clean up

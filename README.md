@@ -2,7 +2,7 @@
 
 A web application built with Go, Echo, SQLite, and HTMX. This app demonstrates basic routing, pagination, and full text search.
 
-Demo: https://simple-web-app.georgespake.com
+Demo: https://archive.georgespake.com
 
 ---
 
@@ -40,8 +40,8 @@ Demo: https://simple-web-app.georgespake.com
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/gpspake/simple-web-app
-cd simple-web-app
+git clone https://github.com/gpspake/archive
+cd archive
 ```
 
 ### 2. Install Dependencies
@@ -80,8 +80,8 @@ air -c .air.toml
 ### With Docker
 You can also run the app with docker.
 ```bash
-docker build -t simple-web-app .
-docker run -p 8086:8086 simple-web-app
+docker build -t archive .
+docker run -p 8086:8086 archive
 ```
 
 Or you can run
@@ -121,11 +121,11 @@ _Note: This section provides a general overview but it's not a comprehensive dep
     ```
    docker ps
     CONTAINER ID   IMAGE                   COMMAND   CREATED         STATUS         PORTS                                                   NAMES
-    19282e9c5697   simple-web-app:latest   "./app"   3 minutes ago   Up 3 minutes   8080/tcp, 0.0.0.0:8080->8086/tcp, [::]:8080->8086/tcp   simple-web-app
+    19282e9c5697   archive:latest   "./app"   3 minutes ago   Up 3 minutes   8080/tcp, 0.0.0.0:8080->8086/tcp, [::]:8080->8086/tcp   archive
    ```
 1. Serve the app. Example using Caddy:
     ```
-   simple-web-app.georgespake.com {
+   archive.georgespake.com {
         reverse_proxy 127.0.0.1:8080
 
         tls {

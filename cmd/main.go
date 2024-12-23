@@ -1,9 +1,9 @@
 package main
 
 import (
+	"archive/internal"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
-	"simple-web-app/internal"
 )
 
 func main() {
