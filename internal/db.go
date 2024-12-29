@@ -14,14 +14,30 @@ import (
 )
 
 func InitDB() (*sql.DB, error) {
-	host := os.Getenv("POSTGRES_HOST")
-	user := os.Getenv("POSTGRES_USER")
-	password := os.Getenv("POSTGRES_PASSWORD")
-	dbname := os.Getenv("POSTGRES_DB")
 
-	connStr := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable", host, user, password, dbname)
+	databaseURL := os.Getenv("DATABASE_URL")
+	var connStr string
+
+	if databaseURL != "" {
+		// Use DATABASE_URL if it is set
+		connStr = databaseURL
+		log.Println("Using DATABASE_URL for database connection")
+	} else {
+		// Construct connection string from individual environment variables
+		host := os.Getenv("POSTGRES_HOST")
+		user := os.Getenv("POSTGRES_USER")
+		password := os.Getenv("POSTGRES_PASSWORD")
+		dbname := os.Getenv("POSTGRES_DB")
+
+		if host == "" || user == "" || password == "" || dbname == "" {
+			return nil, fmt.Errorf("missing one or more required environment variables: POSTGRES_HOST, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB")
+		}
+
+		connStr = fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable", host, user, password, dbname)
+		log.Println("Constructed connection string from individual environment variables")
+	}
+
 	db, err := sql.Open("postgres", connStr)
-
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to PostgreSQL: %w", err)
 	}

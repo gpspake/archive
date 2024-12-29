@@ -36,19 +36,31 @@ jobs:
           DIGITALOCEAN_IP: ${{ secrets.DIGITALOCEAN_IP }}
           SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           echo "${SSH_PRIVATE_KEY}" > private_key
           chmod 600 private_key
           
           # Transfer the Docker image to the droplet
-          docker save archive:latest | ssh -v -i private_key ${SSH_USERNAME}@${DIGITALOCEAN_IP} "docker load"
+          docker save archive:latest | ssh -i private_key ${SSH_USERNAME}@${DIGITALOCEAN_IP} "docker load"
           
+          # Ensure the shared Docker network exists
+          ssh -i private_key ${SSH_USERNAME}@${DIGITALOCEAN_IP} << EOF
+            docker network inspect archive-app-network >/dev/null 2>&1 || docker network create archive-app-network
+          EOF
+
           # Restart the app container on the droplet
           ssh -i private_key ${SSH_USERNAME}@${DIGITALOCEAN_IP} << EOF
             docker stop archive || true
             docker rm archive || true
-            docker run -d --name archive -p 8087:8087 archive:latest
+            docker run -d \
+              --name archive \
+              --network archive-app-network \
+              -p 8087:8087 \
+              -e DATABASE_URL="${DATABASE_URL}" \
+              -e MIGRATIONS_PATH="file:///app/migrations" \
+              archive:latest
           EOF
-          
+
           # Clean up
           rm private_key

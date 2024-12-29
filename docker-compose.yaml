@@ -24,6 +24,7 @@ services:
       POSTGRES_DB: your_db
       POSTGRES_HOST: postgres
       TEMPLATE_DIR: "/app/internal/templates"
+      MIGRATIONS_PATH: "/app/migrations"
     depends_on:
       postgres:
         condition: service_healthy

@@ -11,6 +11,17 @@ func SetupRoutes(e *echo.Echo, db DBQuerier) {
 	// Serve static files
 	e.Static("/static", "static")
 
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			if c.Request().Method == http.MethodHead {
+				// If HEAD request, respond with headers only
+				return c.NoContent(http.StatusOK)
+			}
+			// Continue with other middlewares or the final handler
+			return next(c)
+		}
+	})
+
 	// Define routes
 	e.GET("/", func(c echo.Context) error {
 		// Pass releases to the template
