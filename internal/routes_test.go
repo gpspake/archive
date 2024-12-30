@@ -51,7 +51,7 @@ func TestRoutes(t *testing.T) {
 		e.ServeHTTP(rec, req)
 
 		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Contains(t, rec.Body.String(), "Home Page")
+		assert.Contains(t, rec.Body.String(), "Web App")
 	})
 
 	t.Run("GET / - Rendering Error", func(t *testing.T) {

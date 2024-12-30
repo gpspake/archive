@@ -1,6 +1,6 @@
 # Simple Web App
 
-A web application built with Go, Echo, SQLite, and HTMX. This app demonstrates basic routing, pagination, and full text search.
+A web application built with Go, Echo, PostgreSQL, and HTMX. This app demonstrates basic routing, pagination, and full text search.
 
 Demo: https://archive.georgespake.com
 
@@ -9,7 +9,7 @@ Demo: https://archive.georgespake.com
 ## Features
 
 - **Releases Management**: View a paginated, searchable list of music releases with details like release year and associated artists.
-- **Full Text Search**: Uses the FTS5 sqlite extension with trigram tokenization.
+- **Full Text Search**: Uses native PostgreSQL FTS features.
 - **Templating**: Uses Go's `html/template` package for rendering HTML pages.
 - **In-Memory Testing**: Comprehensive test coverage with an in-memory SQLite database.
 
@@ -19,7 +19,7 @@ Demo: https://archive.georgespake.com
 
 - **Backend**: [Go](https://golang.org/)
 - **Web Framework**: [Echo](https://echo.labstack.com/)
-- **Database**: [SQLite](https://sqlite.org/index.html)
+- **Database**: [PostgreSQL](https://www.postgresql.org/)
 - **Migrations**: [golang-migrate](https://github.com/golang-migrate/migrate)
 - **Styling**: [Tailwind](https://github.com/golang-migrate/migrate)
 - **Partial UI Re-rendering**: [HTMX](https://github.com/golang-migrate/migrate)
@@ -30,7 +30,7 @@ Demo: https://archive.georgespake.com
 ## Prerequisites
 
 - Go 1.20 or later
-- SQLite installed locally (for development)
+- PostgreSQL installed locally (for development)
 - Docker (optional, for containerized deployment)
 
 ---
@@ -49,52 +49,27 @@ cd archive
 go mod tidy
 ```
 
-### 3. Run the App
-```bash
-go run -tags "sqlite_fts5" .
-```
-
-### 4. Visit the site
-
-Navigate to [localhost:8087](http://localhost:8087) in a web browser.
-
----
-
-## Local development
-
-### With Air
-
-Use [Air](https://github.com/air-verse/air) to auto reload when files are changed. 
-
-#### 1. Install Air
+#### 3. Install Air (for auto reloading)
 Make sure `$GOPATH/bin` is in your Path
 ```bash
 go install github.com/air-verse/air@latest
 ```
 
-#### 2. Run the app using Air
+#### 4. Run the app
 ```bash
-air -c .air.toml
+make dev
 ```
 
-### With Docker
-You can also run the app with docker.
-```bash
-docker build -t archive .
-docker run -p 8087:8087 archive
-```
+_Check out the [makefile](/makefile) for other options._
 
-Or you can run
-```bash
-./start.sh
-```
+### 3. Visit the site
 
----
+Navigate to [localhost:8087](http://localhost:8087) in a web browser.
 
 ## Deployment
 This app is configured to deploy to a Digital Ocean using github actions. 
 
-_Note: This section provides a general overview but it's not a comprehensive deployment guide. Some additional server configuration may be required._
+_Note: This section provides a general overview, but it's not a comprehensive deployment guide._
 
 1. On the Droplet: Create a user for deployment and grant the user access to docker.
     ```
@@ -129,7 +104,7 @@ _Note: This section provides a general overview but it's not a comprehensive dep
         reverse_proxy 127.0.0.1:8087
 
         tls {
-                dns digitalocean {env.DO_AUTH_TOKEN}
+                dns cloudflare {env.CLOUDFLARE_TOKEN}
         }
 
         log {
@@ -138,14 +113,3 @@ _Note: This section provides a general overview but it's not a comprehensive dep
         }
     }
    ```
-
----
-
-## Other Stuff
-
-To learn more about how this project was built, check out the commits. Each change is committed with a descriptive message and [gitmoji](https://gitmoji.dev/)
-
-The purpose of this project was to learn more about the stack so some of it was new to me. If I got something wrong, let me know or submit a PR.
-
-I might abandon this but I hope to keep it updated as a starter kit for other projects. 
-
